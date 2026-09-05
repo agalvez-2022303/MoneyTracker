@@ -1,0 +1,178 @@
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="brand" routerLink="/">
+      <img src="assets/logo.png" alt="Money Tracker" class="brand__logo" />
+      <span class="brand__nombre">Money<span class="brand__acento">Tracker</span></span>
+    </a>
+    <nav class="nav__links">
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#numeros">Números</a>
+      <a href="#empezar">Empezar</a>
+    </nav>
+    <a routerLink="/login" class="btn btn-primario nav__cta">
+      Iniciar sesión
+      <svg lucideArrowRight size="16"></svg>
+    </a>
+  </div>
+</header>
+
+<main>
+  <section class="hero container">
+    <div class="hero__izq" appReveal>
+      <span class="chip">
+        <span class="chip__punto"></span>
+        Gestión financiera en tiempo real
+      </span>
+      <h1 class="hero__titulo">
+        Tu dinero,<br />
+        <span>en órbita.</span>
+      </h1>
+      <p class="hero__sub">
+        Registra gastos e ingresos, alcanza tus metas de ahorro y entiende a dónde va cada quetzal con
+        una interfaz clara, rápida y segura.
+      </p>
+      <div class="hero__acciones">
+        <a routerLink="/login" class="btn btn-primario">
+          Comenzar ahora
+          <svg lucideArrowRight size="16"></svg>
+        </a>
+        <a href="#funcionalidades" class="btn btn-secundario">Ver características</a>
+      </div>
+      <ul class="hero__checks">
+        <li>Saldos en tiempo real</li>
+        <li>Metas de ahorro</li>
+        <li>Múltiples monedas</li>
+      </ul>
+    </div>
+
+    <div class="hero__der" appReveal [delay]="150">
+      <div class="hero__escena">
+        <app-three-d-shapes></app-three-d-shapes>
+      </div>
+      <div class="tarjeta" #tarjeta>
+        <div class="tarjeta__encabezado">
+          <div>
+            <span class="tarjeta__label">Portafolio</span>
+            <span class="tarjeta__saldo">$12,480.90</span>
+          </div>
+          <span class="tarjeta__delta">
+            <svg lucideTrendingUp size="14"></svg>
+            +12.4%
+          </span>
+        </div>
+
+        <div class="grafico" aria-hidden="true">
+          <div class="barra" *ngFor="let b of [38, 52, 44, 66, 58, 80, 72, 92, 84, 100]"
+               [style.height.%]="b"></div>
+        </div>
+
+        <ul class="tarjeta__lista">
+          <li class="fila" *ngFor="let t of transacciones">
+            <span class="fila__punto fila__punto--{{ t.tipo }}"></span>
+            <span class="fila__nombre">{{ t.nombre }}</span>
+            <span class="fila__monto fila__monto--{{ t.tipo }}">{{ t.monto }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__pista">
+      <span class="marquee__item" *ngFor="let c of cotizaciones">{{ c }}<span class="marquee__sep">✦</span></span>
+    </div>
+  </div>
+
+  <section id="funcionalidades" class="seccion container">
+    <div class="seccion__cabecera" appReveal>
+      <span class="chip">Características</span>
+      <h2 class="seccion-titulo">Todo lo que necesitas para <span>mejorar</span></h2>
+      <p class="seccion-sub">
+        Nada de hojas de cálculo desordenadas ni apps complicadas. Money Tracker mantiene tus finanzas
+        simples, ordenadas y siempre a la vista.
+      </p>
+    </div>
+
+    <div class="grid-cards">
+      <article class="card" appReveal>
+        <span class="card__icono" style="--icono:#22C55E">
+          <svg lucideWallet size="22"></svg>
+        </span>
+        <h3 class="card__titulo">Registros al instante</h3>
+        <p class="card__desc">Añade ingresos y gastos en segundos, desde cualquier dispositivo. Cada movimiento cuenta.</p>
+      </article>
+      <article class="card" appReveal [delay]="90">
+        <span class="card__icono" style="--icono:#4ADE80">
+          <svg lucideLayoutDashboard size="22"></svg>
+        </span>
+        <h3 class="card__titulo">Panel en tiempo real</h3>
+        <p class="card__desc">Tu saldo, tus cuentas y tus movimientos se actualizan al momento. Todo en un solo lugar.</p>
+      </article>
+      <article class="card" appReveal [delay]="180">
+        <span class="card__icono" style="--icono:#9945FF">
+          <svg lucideTarget size="22"></svg>
+        </span>
+        <h3 class="card__titulo">Metas de ahorro</h3>
+        <p class="card__desc">Define objetivos, da seguimiento al progreso y celebra cada avance hacia ellos.</p>
+      </article>
+      <article class="card" appReveal [delay]="0">
+        <span class="card__icono" style="--icono:#627EEA">
+          <svg lucideTags size="22"></svg>
+        </span>
+        <h3 class="card__titulo">Categorías claras</h3>
+        <p class="card__desc">Tu dinero se organiza solo: alimentación, transporte, servicios y más, bien clasificados.</p>
+      </article>
+      <article class="card" appReveal [delay]="90">
+        <span class="card__icono" style="--icono:#22C55E">
+          <svg lucideShieldCheck size="22"></svg>
+        </span>
+        <h3 class="card__titulo">Seguridad sólida</h3>
+        <p class="card__desc">Autenticación con sesión segura y datos protegidos. Tu información siempre resguardada.</p>
+      </article>
+      <article class="card" appReveal [delay]="180">
+        <span class="card__icono" style="--icono:#16A34A">
+          <svg lucideGlobe size="22"></svg>
+        </span>
+        <h3 class="card__titulo">Multi-moneda</h3>
+        <p class="card__desc">Maneja varias divisas y conviértelas al instante con las tasas que tú defines.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="numeros" class="numeros">
+    <div class="container numeros__grid">
+      <div class="numero" appReveal *ngFor="let c of contadores">
+        <span class="numero__valor">
+          {{ c.decimales ? c.actual.toFixed(c.decimales) : c.actual }}{{ c.sufijo }}
+        </span>
+        <span class="numero__label">{{ c.etiqueta }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="empezar" class="seccion container">
+    <div class="empezar" appReveal>
+      <span class="chip">Listo para arrancar</span>
+      <h2 class="seccion-titulo">Pon tu dinero <span>en órbita.</span></h2>
+      <p class="seccion-sub empezar__sub">
+        Crea tu cuenta o inicia sesión en menos de un minuto. Tu panel te está esperando.
+      </p>
+      <div class="empezar__acciones">
+        <a routerLink="/login" class="btn btn-primario">
+          Iniciar sesión
+          <svg lucideArrowRight size="16"></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <a class="brand" routerLink="/">
+      <img src="assets/logo.png" alt="Money Tracker" class="brand__logo" />
+      <span class="brand__nombre">Money<span class="brand__acento">Tracker</span></span>
+    </a>
+    <p class="footer__texto">Money Tracker · Proyecto de grado · Angel Galvez</p>
+  </div>
+</footer>
