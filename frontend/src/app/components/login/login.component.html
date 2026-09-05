@@ -76,12 +76,12 @@
         }
       </div>
 
-      @if (error) {
-        <div class="login__toast" role="alert">{{ error }}</div>
+      @if (error()) {
+        <div class="login__toast" role="alert">{{ error() }}</div>
       }
 
-      <button type="submit" class="btn btn-primario login__enviar" [disabled]="enviando">
-        @if (enviando) {
+      <button type="submit" class="btn btn-primario login__enviar" [disabled]="enviando()">
+        @if (enviando()) {
           <span class="login__spinner"></span>
           Ingresando…
         } @else {

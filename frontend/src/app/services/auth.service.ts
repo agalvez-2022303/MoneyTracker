@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, switchMap } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 
 export interface UsuarioSesion {
   id: number;
@@ -33,13 +33,7 @@ export class AuthService {
   verificarSesion(): Observable<boolean> {
     return this.http.get<{ dashboard: unknown }>('/api/dashboard').pipe(
       map(() => true),
-      catchError(() =>
-        this.http.post<{ ok: boolean }>('/api/auth/refresh', {}).pipe(
-          switchMap(() => this.http.get<{ dashboard: unknown }>('/api/dashboard')),
-          map(() => true),
-          catchError(() => of(false))
-        )
-      )
+      catchError(() => of(false))
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -42,33 +42,33 @@ export class LoginComponent {
   });
 
   mostrarPassword = false;
-  enviando = false;
-  error = '';
+  readonly enviando = signal(false);
+  readonly error = signal('');
 
   enviar(): void {
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
       return;
     }
-    this.enviando = true;
-    this.error = '';
+    this.enviando.set(true);
+    this.error.set('');
     const { email, password } = this.formulario.getRawValue();
 
     const sub = this.auth.login(email, password).subscribe({
-      next: (usuario) => {
-        this.enviando = false;
+      next: () => {
+        this.enviando.set(false);
         this.router.navigate(['/dashboard']);
       },
       error: (err: HttpErrorResponse) => {
-        this.enviando = false;
+        this.enviando.set(false);
         if (err.status === 401) {
-          this.error = 'Correo o contraseña incorrectos.';
+          this.error.set('Correo o contraseña incorrectos.');
         } else if (typeof err.error === 'string' && err.error) {
-          this.error = err.error;
+          this.error.set(err.error);
         } else if (err.error?.error) {
-          this.error = err.error.error;
+          this.error.set(err.error.error);
         } else {
-          this.error = 'No se pudo conectar con el servidor.';
+          this.error.set('No se pudo conectar con el servidor.');
         }
       },
     });

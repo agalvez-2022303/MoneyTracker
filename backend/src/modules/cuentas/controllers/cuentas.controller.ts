@@ -60,7 +60,7 @@ export const crear = asyncHandler(async (req: Request, res: Response) => {
     nombre: validarNombre(req.body.nombre),
     tipo: validarTipo(req.body.tipo),
     descripcion: validarDescripcion(req.body.descripcion),
-    montoInicial: req.body.monto_inicial !== undefined ? validarMonto(req.body.monto_inicial, 'monto_inicial') : undefined,
+    montoInicial: req.body.monto_inicial !== undefined ? validarMonto(req.body.monto_inicial, 'monto_inicial', true) : undefined,
   });
   res.status(201).json({ cuenta });
 });

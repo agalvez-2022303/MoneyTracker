@@ -1,0 +1,134 @@
+<app-ui-modal
+  titulo="Nueva meta"
+  subtitulo="Define un objetivo de ahorro"
+  (cerrado)="cerrar()"
+>
+  <form
+    id="form-meta"
+    [formGroup]="formulario"
+    (ngSubmit)="enviar()"
+    class="flex flex-col gap-5 px-5 py-5 sm:px-6"
+    novalidate
+  >
+    <app-ui-input
+      formControlName="nombre"
+      etiqueta="Nombre"
+      placeholder="Ej. Viaje a la playa"
+      [invalido]="!!err('nombre')"
+      [error]="err('nombre')"
+    />
+
+    <app-ui-input
+      formControlName="cantidad"
+      etiqueta="Cantidad a cumplir"
+      prefijo="Q"
+      tipo="number"
+      paso="0.01"
+      minimo="0"
+      placeholder="0.00"
+      [invalido]="!!err('cantidad')"
+      [error]="err('cantidad')"
+    />
+
+    <div>
+      <span class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[#9CA3AF]">
+        Prioridad
+      </span>
+      <div class="flex gap-2" role="radiogroup" aria-label="Prioridad">
+        @for (p of prioridades; track p.valor) {
+          <button
+            type="button"
+            (click)="setPrioridad(p.valor)"
+            class="flex-1 rounded-full border px-3 py-2 text-xs font-semibold transition-colors"
+            [class]="formulario.getRawValue().prioridad === p.valor ? p.clase : 'border-white/10 text-[#9CA3AF] hover:border-white/25 hover:text-[#F5F5F5]'"
+          >
+            {{ p.texto }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <app-ui-area
+      formControlName="descripcion"
+      etiqueta="Descripcion"
+      placeholder="Detalles opcionales del objetivo"
+      [opcional]="true"
+    />
+
+    <div>
+      <span class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[#9CA3AF]">
+        Icono
+      </span>
+      <div class="grid grid-cols-5 gap-2" role="radiogroup" aria-label="Icono">
+        @for (ic of iconos; track ic.clave) {
+          <button
+            type="button"
+            (click)="setIcono(ic.clave)"
+            [attr.aria-label]="ic.nombre"
+            [attr.aria-checked]="formulario.getRawValue().icono === ic.clave"
+            class="flex aspect-square items-center justify-center rounded-xl border transition-colors"
+            [class]="
+              formulario.getRawValue().icono === ic.clave
+                ? 'border-[#22E27A] bg-[#22E27A]/15 text-[#22E27A]'
+                : 'border-white/10 bg-[#121214] text-[#9CA3AF] hover:border-white/25 hover:text-[#F5F5F5]'
+            "
+          >
+            <svg [lucideIcon]="ic.icono" size="18"></svg>
+          </button>
+        }
+      </div>
+      @if (err('icono')) {
+        <span class="mt-1.5 block text-xs leading-tight text-[#EF4444]">{{ err('icono') }}</span>
+      }
+    </div>
+
+    <app-ui-input
+      formControlName="fechaLimite"
+      etiqueta="Tiempo para cumplir el objetivo"
+      tipo="date"
+      [invalido]="!!err('fechaLimite')"
+      [error]="err('fechaLimite')"
+    />
+
+    <app-ui-input
+      formControlName="montoInicial"
+      etiqueta="Monto inicial"
+      prefijo="Q"
+      tipo="number"
+      paso="0.01"
+      minimo="0"
+      placeholder="0.00 (opcional)"
+      [opcional]="true"
+      [invalido]="!!err('montoInicial')"
+      [error]="err('montoInicial')"
+    />
+
+    @if (errorGlobal()) {
+      <p class="rounded-xl border border-[#EF4444]/30 bg-[#EF4444]/10 px-4 py-3 text-[13px] leading-snug text-[#EF4444]">
+        {{ errorGlobal() }}
+      </p>
+    }
+  </form>
+
+  <div ui-footer class="flex items-center justify-end gap-3 border-t border-white/5 bg-[#161619] px-5 py-4 sm:px-6">
+    <button
+      type="button"
+      (click)="cerrar()"
+      [disabled]="enviando()"
+      class="rounded-full border border-white/10 px-5 py-2.5 text-[13px] font-semibold text-[#9CA3AF] transition-colors hover:border-white/25 hover:text-[#F5F5F5] disabled:opacity-60"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      form="form-meta"
+      [disabled]="formulario.invalid || enviando()"
+      class="inline-flex items-center gap-2 rounded-full bg-[#22E27A] px-5 py-2.5 text-[13px] font-semibold text-[#121214] transition-transform enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      @if (enviando()) {
+        <span class="dash-spinner"></span>
+      }
+      Crear meta
+    </button>
+  </div>
+</app-ui-modal>

@@ -1,0 +1,173 @@
+<app-ui-modal
+  titulo="Nueva transacción"
+  subtitulo="Registra un ingreso o egreso"
+  (cerrado)="cerrar()"
+>
+  <form
+    id="form-transaccion"
+    [formGroup]="formulario"
+    (ngSubmit)="enviar()"
+    class="flex flex-col gap-5 px-5 py-5 sm:px-6"
+    novalidate
+  >
+    <app-ui-input
+      formControlName="nombre"
+      etiqueta="Nombre"
+      placeholder="Ej. Corte de cabello"
+      [invalido]="!!err('nombre')"
+      [error]="err('nombre')"
+    />
+
+    <div>
+      <span class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[#9CA3AF]">
+        Tipo
+      </span>
+      <div class="flex gap-1 rounded-full border border-white/5 bg-[#121214] p-1" role="radiogroup" aria-label="Tipo de transacción">
+        <button
+          type="button"
+          (click)="setTipo('ingreso')"
+          class="flex-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors"
+          [class]="
+            formulario.getRawValue().tipo === 'ingreso'
+              ? 'bg-[#22E27A] text-[#121214]'
+              : 'text-[#9CA3AF] hover:text-[#F5F5F5]'
+          "
+        >
+          Ingreso
+        </button>
+        <button
+          type="button"
+          (click)="setTipo('egreso')"
+          class="flex-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors"
+          [class]="
+            formulario.getRawValue().tipo === 'egreso'
+              ? 'bg-[#EF4444] text-white'
+              : 'text-[#9CA3AF] hover:text-[#F5F5F5]'
+          "
+        >
+          Egreso
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <app-ui-select
+        formControlName="destino"
+        etiqueta="Cuenta o Meta destino"
+        placeholder="Selecciona una opción"
+        [invalido]="!!err('destino')"
+        [error]="err('destino')"
+      >
+        @if (cuentas().length > 0) {
+          <optgroup label="Cuentas">
+            @for (c of cuentas(); track c.id) {
+              <option [value]="'c' + c.id">{{ c.nombre }}</option>
+            }
+          </optgroup>
+        }
+        @if (metas().length > 0) {
+          <optgroup label="Metas">
+            @for (m of metas(); track m.id) {
+              <option [value]="'m' + m.id">{{ m.nombre }}</option>
+            }
+          </optgroup>
+        }
+      </app-ui-select>
+      @if (cuentas().length === 0 && metas().length === 0) {
+        <p class="mt-1.5 text-xs leading-snug text-[#9CA3AF]">
+          Primero crea una cuenta o una meta para poder registrar transacciones.
+        </p>
+      }
+    </div>
+
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_10rem] sm:items-start">
+      <app-ui-input
+        formControlName="cantidad"
+        etiqueta="Cantidad"
+        prefijo="Q"
+        tipo="number"
+        paso="0.01"
+        minimo="0"
+        placeholder="0.00"
+        [invalido]="!!err('cantidad')"
+        [error]="err('cantidad')"
+      />
+      <div class="min-w-0">
+        <app-ui-select formControlName="moneda" etiqueta="Moneda">
+          @for (m of monedas; track m.codigo) {
+            <option [value]="m.codigo">{{ m.codigo }}</option>
+          }
+        </app-ui-select>
+      </div>
+    </div>
+
+    @if (previewQt() !== null) {
+      <p
+        class="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#22E27A]/25 bg-[#22E27A]/10 px-4 py-2.5 text-[13px] text-[#F5F5F5]"
+      >
+        Equivalente:
+        <strong class="text-[#22E27A]">{{ textoPreviewQt() }}</strong>
+        <span class="text-[11px] text-[#9CA3AF]">
+          · 1 {{ formulario.getRawValue().moneda }} = {{ tasaActual() }} Q
+        </span>
+      </p>
+    }
+
+    <div class="flex flex-col gap-3">
+      <app-ui-select formControlName="categoria" etiqueta="Categoría">
+        @for (cat of categorias; track cat.valor) {
+          <option [value]="cat.valor">{{ cat.texto }}</option>
+        }
+      </app-ui-select>
+      @if (formulario.getRawValue().categoria === 'otro') {
+        <app-ui-input
+          formControlName="categoriaOtro"
+          etiqueta="Escribe tu categoría"
+          placeholder="Ej. Alquiler de películas"
+          [invalido]="!!err('categoriaOtro')"
+          [error]="err('categoriaOtro')"
+        />
+      }
+    </div>
+
+    <app-ui-area
+      formControlName="descripcion"
+      etiqueta="Descripcion"
+      placeholder="Detalles opcionales"
+      [opcional]="true"
+    />
+
+    @if (errorGlobal()) {
+      <p class="rounded-xl border border-[#EF4444]/30 bg-[#EF4444]/10 px-4 py-3 text-[13px] leading-snug text-[#EF4444]">
+        {{ errorGlobal() }}
+      </p>
+    }
+  </form>
+
+  <div ui-footer class="flex items-center justify-end gap-3 border-t border-white/5 bg-[#161619] px-5 py-4 sm:px-6">
+    <button
+      type="button"
+      (click)="cerrar()"
+      [disabled]="enviando()"
+      class="rounded-full border border-white/10 px-5 py-2.5 text-[13px] font-semibold text-[#9CA3AF] transition-colors hover:border-white/25 hover:text-[#F5F5F5] disabled:opacity-60"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      form="form-transaccion"
+      [disabled]="formulario.invalid || enviando()"
+      class="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-semibold transition-transform enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+      [class]="
+        formulario.getRawValue().tipo === 'ingreso'
+          ? 'bg-[#22E27A] text-[#121214]'
+          : 'bg-[#EF4444] text-white'
+      "
+    >
+      @if (enviando()) {
+        <span class="dash-spinner"></span>
+      }
+      Registrar transacción
+    </button>
+  </div>
+</app-ui-modal>

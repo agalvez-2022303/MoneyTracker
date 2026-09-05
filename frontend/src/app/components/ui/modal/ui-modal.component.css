@@ -1,0 +1,30 @@
+:host { display: contents; }
+
+.ui-modal__fondo {
+  animation: ui-modal-fade 0.2s ease-out both;
+}
+
+.ui-modal__tarjeta {
+  animation: ui-modal-sube 0.28s var(--ease-warp, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+@media (min-width: 640px) {
+  .ui-modal__tarjeta {
+    animation-name: ui-modal-escala;
+  }
+}
+
+@keyframes ui-modal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ui-modal-sube {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ui-modal-escala {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}

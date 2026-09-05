@@ -37,6 +37,27 @@ export interface TransaccionFiltro {
   limit?: number;
 }
 
+export interface ResumenMes {
+  ingreso: number;
+  egreso: number;
+}
+
+export async function sumMesPorTipo(usuarioId: number): Promise<ResumenMes> {
+  const { rows } = await query<{ tipo: TipoTransaccion; total: string }>(
+    `SELECT tipo, COALESCE(SUM(monto_gtq), 0)::text AS total
+     FROM transacciones
+     WHERE usuario_id = $1
+       AND date_trunc('month', created_at) = date_trunc('month', now())
+     GROUP BY tipo`,
+    [usuarioId],
+  );
+  const resumen: ResumenMes = { ingreso: 0, egreso: 0 };
+  for (const fila of rows) {
+    resumen[fila.tipo] = Number(fila.total);
+  }
+  return resumen;
+}
+
 export async function findAllByUsuario(usuarioId: number, filtro: TransaccionFiltro = {}): Promise<TransaccionRow[]> {
   const condiciones: string[] = ['usuario_id = $1'];
   const values: unknown[] = [usuarioId];

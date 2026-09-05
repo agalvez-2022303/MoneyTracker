@@ -1,5 +1,5 @@
 import * as cuentaModel from '../models/cuenta.model';
-import { BadRequestError, NotFoundError } from '../../../utils/errors';
+import { NotFoundError } from '../../../utils/errors';
 import { toNumber } from '../../../utils/http';
 
 export const TIPOS_CUENTA: cuentaModel.TipoCuenta[] = ['efectivo', 'tarjeta', 'cripto', 'otro'];
@@ -55,7 +55,6 @@ export async function obtenerPorId(usuarioId: number, id: number): Promise<Cuent
 
 export async function crear(usuarioId: number, datos: CrearCuenta): Promise<CuentaPublica> {
   const montoInicial = datos.montoInicial ?? 0;
-  if (montoInicial < 0) throw new BadRequestError('El monto inicial no puede ser negativo');
 
   const row = await cuentaModel.create({
     usuarioId,
