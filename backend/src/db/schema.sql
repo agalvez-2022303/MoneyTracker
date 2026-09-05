@@ -49,8 +49,7 @@ CREATE TABLE IF NOT EXISTS transacciones (
   moneda_original   TEXT NOT NULL DEFAULT 'GTQ',
   tasa_cambio_usada NUMERIC(20, 8) NOT NULL DEFAULT 1,
   monto_gtq         NUMERIC(14, 2) NOT NULL,
-  created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
-  CONSTRAINT transacciones_debe_tener_destino CHECK (cuenta_id IS NOT NULL OR meta_id IS NOT NULL)
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- Sesiones de refresh token: permiten invalidar sesiones (logout) y controlar inactividad.
