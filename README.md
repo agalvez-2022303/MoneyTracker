@@ -2,6 +2,10 @@
 
 Aplicación web para llevar el control de tus finanzas personales. La idea es simple: registrar tus cuentas, tus metas de ahorro y cada movimiento (ingresos y egresos) para tener una vista clara de donde va tu dinero.
 
+## Versión
+
+**1.0** - Primera versión del programa. Incluye el login, el panel principal con el resumen de dinero, el registro de cuentas, metas y transacciones desde el botón flotante, y el círculo de progreso en el dashboard.
+
 ## Tecnologías
 
 - **Frontend:** Angular 22 (standalone, sin zone.js), Tailwind CSS, iconos de Lucide
