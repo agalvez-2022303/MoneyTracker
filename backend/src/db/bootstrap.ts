@@ -3,6 +3,7 @@ import path from 'node:path';
 import { Client } from 'pg';
 import { createAdminPool, pool } from '../config/db';
 import { env } from '../config/env';
+import { seedAdminUser } from './seed';
 
 function assertSafeIdentifier(name: string): void {
   if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) {
@@ -36,6 +37,8 @@ export async function bootstrapDatabase(): Promise<void> {
   const schema = readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   await pool.query(schema);
   console.log('[db] Tablas verificadas/creadas satisfactoriamente');
+
+  await seedAdminUser();
 }
 
 if (require.main === module) {

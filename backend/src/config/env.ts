@@ -27,6 +27,8 @@ export const env = {
     password: process.env.PGPASSWORD as string,
     database: process.env.PG_DATABASE as string,
   },
+  adminEmail: process.env.ADMIN_EMAIL,
+  adminPassword: process.env.ADMIN_PASSWORD,
   auth: {
     jwtAccessSecret: process.env.JWT_ACCESS_SECRET as string,
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET as string,
