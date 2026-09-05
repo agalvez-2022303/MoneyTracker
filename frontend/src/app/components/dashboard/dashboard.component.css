@@ -1,0 +1,89 @@
+:host { display: block; min-height: 100vh; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand__logo { width: 32px; height: auto; }
+.brand__nombre { font-weight: 800; font-size: 17px; letter-spacing: -0.02em; }
+.brand__acento { color: var(--accent); }
+
+.dash__bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid rgba(30, 30, 36, 0.7);
+  background: rgba(4, 8, 6, 0.65);
+  backdrop-filter: blur(14px);
+}
+.dash__bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+.dash__logout {
+  padding: 9px 16px;
+  font-size: 13px;
+}
+.dash__logout:disabled { opacity: 0.6; cursor: not-allowed; }
+.dash__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(240, 240, 240, 0.2);
+  border-top-color: var(--fg);
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+.dash__main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 68px);
+  padding: 40px 24px;
+}
+.dash__tarjeta {
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  padding: 64px 40px;
+  background:
+    radial-gradient(60% 70% at 50% 0%, rgba(34, 197, 94, 0.08), transparent 70%),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+}
+.dash__tarjeta .chip { margin-bottom: 24px; }
+.dash__titulo {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+.dash__titulo span {
+  background: linear-gradient(100deg, var(--accent), var(--accent-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dash__sub {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.dash__sub strong { color: var(--fg); font-weight: 600; }
+.dash__link {
+  font-size: 13px;
+  color: var(--accent);
+  opacity: 0.85;
+  transition: opacity 0.3s;
+}
+.dash__link:hover { opacity: 1; }

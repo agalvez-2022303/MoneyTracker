@@ -1,0 +1,39 @@
+<div class="dash">
+  <header class="dash__bar">
+    <div class="container dash__bar-inner">
+      <a class="brand" routerLink="/">
+        <img src="assets/logo.png" alt="Money Tracker" class="brand__logo" />
+        <span class="brand__nombre">Money<span class="brand__acento">Tracker</span></span>
+      </a>
+      <button class="btn btn-secundario dash__logout" (click)="cerrarSesion()" [disabled]="saliendo">
+        @if (saliendo) {
+          <span class="dash__spinner"></span>
+          Saliendo…
+        } @else {
+          <svg lucideLogOut size="15"></svg>
+          Cerrar sesión
+        }
+      </button>
+    </div>
+  </header>
+
+  <main class="container dash__main">
+    <div class="dash__tarjeta">
+      <span class="chip">
+        <svg lucideLayoutDashboard size="12"></svg>
+        Panel
+      </span>
+
+      <h1 class="dash__titulo">Tu dashboard está <span>en camino.</span></h1>
+
+      <p class="dash__sub">
+        @if (usuario()?.email) {
+          Conectado como <strong>{{ usuario()!.email }}</strong>.
+        }
+        La vista con tus cuentas, movimientos y metas de ahorro se construye a continuación.
+      </p>
+
+      <a routerLink="/" class="dash__link">← Volver a la página de inicio</a>
+    </div>
+  </main>
+</div>
