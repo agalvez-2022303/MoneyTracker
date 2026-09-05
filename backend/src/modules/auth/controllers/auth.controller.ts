@@ -6,14 +6,22 @@ import { env } from '../../../config/env';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function crearOpcionesCookie(maxAgeMs: number): CookieOptions {
+function crearOpcionesCookie(maxAgeMs: number, path: string): CookieOptions {
   return {
     httpOnly: true,
     secure: env.nodeEnv === 'production',
     sameSite: 'lax',
-    path: '/api/auth',
+    path,
     maxAge: maxAgeMs,
   };
+}
+
+function opcionesAccessToken(): CookieOptions {
+  return crearOpcionesCookie(env.auth.accessTokenMinutes * 60 * 1000, '/');
+}
+
+function opcionesRefreshToken(): CookieOptions {
+  return crearOpcionesCookie(env.auth.refreshTokenHours * 60 * 60 * 1000, '/api/auth');
 }
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -29,8 +37,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   const sesion = await authService.login(email.toLowerCase().trim(), password);
 
-  res.cookie('access_token', sesion.accessToken, crearOpcionesCookie(env.auth.accessTokenMinutes * 60 * 1000));
-  res.cookie('refresh_token', sesion.refreshToken, crearOpcionesCookie(env.auth.refreshTokenHours * 60 * 60 * 1000));
+  res.cookie('access_token', sesion.accessToken, opcionesAccessToken());
+  res.cookie('refresh_token', sesion.refreshToken, opcionesRefreshToken());
 
   res.json({ usuario: sesion.usuario });
 });
@@ -38,8 +46,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
   const sesion = await authService.refresh(req.cookies?.refresh_token);
 
-  res.cookie('access_token', sesion.accessToken, crearOpcionesCookie(env.auth.accessTokenMinutes * 60 * 1000));
-  res.cookie('refresh_token', sesion.refreshToken, crearOpcionesCookie(env.auth.refreshTokenHours * 60 * 60 * 1000));
+  res.cookie('access_token', sesion.accessToken, opcionesAccessToken());
+  res.cookie('refresh_token', sesion.refreshToken, opcionesRefreshToken());
 
   res.json({ ok: true });
 });
@@ -48,7 +56,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   const refreshToken = req.cookies?.refresh_token;
   await authService.logout(refreshToken);
 
-  res.clearCookie('access_token', crearOpcionesCookie(0));
-  res.clearCookie('refresh_token', crearOpcionesCookie(0));
+  res.clearCookie('access_token', opcionesAccessToken());
+  res.clearCookie('refresh_token', opcionesRefreshToken());
   res.status(204).send();
 });
